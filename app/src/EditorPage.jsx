@@ -53,7 +53,6 @@ EditorForm = reduxForm({
   form: 'editor'
 })(EditorForm)
 
-
 const EditorPage = ({ handleSubmit, history }) => {
   const submit = async (values) => {
     const articleSlug = await createArticle(values)

@@ -17,7 +17,13 @@ const fetchQuery = async (operation, variables, cacheConfig, uploadables) => {
     })
   })
 
-  return response.json()
+  const json = await response.json()
+
+  if (json.errors) {
+    throw json.errors
+  }
+
+  return json
 }
 
 const network = Network.create(fetchQuery)

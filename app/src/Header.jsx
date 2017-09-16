@@ -20,7 +20,7 @@ const Header = () =>
           </NavLink>
         </li>
         <li className="nav-item">
-          <NavLink to="/login" className="nav-link" exact>Sign up</NavLink>
+          <NavLink to="/register" className="nav-link" exact>Sign up</NavLink>
         </li>
       </ul>
     </div>
