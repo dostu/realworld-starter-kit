@@ -1,6 +1,7 @@
 import React from 'react'
 
 import Page from './Page'
+import FollowButton from './FollowButton'
 
 const ProfilePage = () =>
   <Page className="profile-page">
@@ -15,13 +16,8 @@ const ProfilePage = () =>
             <p>
               Cofounder @GoThinkster, lived in Aol's HQ for a few months, kinda looks like Peeta from the Hunger Games
             </p>
-            <button className="btn btn-sm btn-outline-secondary action-btn">
-              <i className="ion-plus-round"></i>
-              &nbsp;
-              Follow Eric Simons
-            </button>
+            <FollowButton className="action-btn" />
           </div>
-
         </div>
       </div>
     </div>
