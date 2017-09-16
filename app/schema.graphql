@@ -13,6 +13,21 @@ type AddToArticleOnCommentPayload {
   commentsCommentEdge: CommentEdge
 }
 
+type AddToFavoriteArticlesPayload {
+  viewer: Viewer!
+  clientMutationId: String!
+  favoritedByUser: User
+  favoritedArticlesArticle: Article
+  favoritedByUserEdge: UserEdge
+  favoritedArticlesArticleEdge: ArticleEdge
+}
+
+input AddToFavoriteArticlesUserInput {
+  favoritedArticlesArticleId: ID!
+  favoritedByUserId: ID!
+  clientMutationId: String!
+}
+
 type AddToUserOnArticlePayload {
   viewer: Viewer!
   clientMutationId: String!
@@ -49,6 +64,7 @@ type Article implements Node {
   comments(filter: CommentFilter, orderBy: CommentOrderBy, skip: Int, after: String, before: String, first: Int, last: Int): CommentConnection
   createdAt: DateTime!
   description: String!
+  favoritedBy(filter: UserFilter, orderBy: UserOrderBy, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection
   id: ID!
   slug: String
   title: String!
@@ -335,6 +351,9 @@ input ArticleFilter {
   comments_every: CommentFilter
   comments_some: CommentFilter
   comments_none: CommentFilter
+  favoritedBy_every: UserFilter
+  favoritedBy_some: UserFilter
+  favoritedBy_none: UserFilter
 }
 
 enum ArticleOrderBy {
@@ -380,6 +399,7 @@ input CommentarticleArticle {
   authorId: ID
   commentsIds: [ID!]
   comments: [ArticlecommentsComment!]
+  favoritedByIds: [ID!]
 }
 
 # A connection to a list of items.
@@ -556,6 +576,7 @@ input CreateArticle {
   authorId: ID
   commentsIds: [ID!]
   comments: [ArticlecommentsComment!]
+  favoritedByIds: [ID!]
 }
 
 input CreateArticleInput {
@@ -566,6 +587,7 @@ input CreateArticleInput {
   authorId: ID
   commentsIds: [ID!]
   comments: [ArticlecommentsComment!]
+  favoritedByIds: [ID!]
   clientMutationId: String!
 }
 
@@ -625,6 +647,8 @@ input CreateUser {
   articles: [UserarticlesArticle!]
   commentsIds: [ID!]
   comments: [UsercommentsComment!]
+  favoritedArticlesIds: [ID!]
+  favoritedArticles: [UserfavoritedArticlesArticle!]
 }
 
 # If authentication was successful the payload contains the user and a token. If unsuccessful this payload is null.
@@ -1033,8 +1057,10 @@ type Mutation {
   deleteFile(input: DeleteFileInput!): DeleteFilePayload
   deleteUser(input: DeleteUserInput!): DeleteUserPayload
   addToArticleOnComment(input: AddToArticleOnCommentArticleInput!): AddToArticleOnCommentPayload
+  addToFavoriteArticles(input: AddToFavoriteArticlesUserInput!): AddToFavoriteArticlesPayload
   addToUserOnArticle(input: AddToUserOnArticleUserInput!): AddToUserOnArticlePayload
   addToUserOnComment(input: AddToUserOnCommentUserInput!): AddToUserOnCommentPayload
+  removeFromFavoriteArticles(input: RemoveFromFavoriteArticlesUserInput!): RemoveFromFavoriteArticlesPayload
   signinUser(input: SigninUserInput!): SigninPayload!
   createUser(input: SignupUserInput!): CreateUserPayload!
 }
@@ -1070,6 +1096,21 @@ type Query {
   ): Node
 }
 
+type RemoveFromFavoriteArticlesPayload {
+  viewer: Viewer!
+  clientMutationId: String!
+  favoritedByUser: User
+  favoritedArticlesArticle: Article
+  favoritedByUserEdge: UserEdge
+  favoritedArticlesArticleEdge: ArticleEdge
+}
+
+input RemoveFromFavoriteArticlesUserInput {
+  favoritedArticlesArticleId: ID!
+  favoritedByUserId: ID!
+  clientMutationId: String!
+}
+
 # If authentication was successful the payload contains the user and a token. If unsuccessful this payload is null.
 type SigninPayload {
   token: String
@@ -1091,6 +1132,8 @@ input SignupUserInput {
   articles: [UserarticlesArticle!]
   commentsIds: [ID!]
   comments: [UsercommentsComment!]
+  favoritedArticlesIds: [ID!]
+  favoritedArticles: [UserfavoritedArticlesArticle!]
   clientMutationId: String!
   authProvider: AuthProviderSignupData!
 }
@@ -1104,6 +1147,7 @@ input UpdateArticle {
   authorId: ID
   commentsIds: [ID!]
   comments: [ArticlecommentsComment!]
+  favoritedByIds: [ID!]
 }
 
 input UpdateArticleInput {
@@ -1115,6 +1159,7 @@ input UpdateArticleInput {
   authorId: ID
   commentsIds: [ID!]
   comments: [ArticlecommentsComment!]
+  favoritedByIds: [ID!]
   clientMutationId: String!
 }
 
@@ -1234,6 +1279,8 @@ input UpdateUser {
   articles: [UserarticlesArticle!]
   commentsIds: [ID!]
   comments: [UsercommentsComment!]
+  favoritedArticlesIds: [ID!]
+  favoritedArticles: [UserfavoritedArticlesArticle!]
 }
 
 input UpdateUserInput {
@@ -1245,6 +1292,8 @@ input UpdateUserInput {
   articles: [UserarticlesArticle!]
   commentsIds: [ID!]
   comments: [UsercommentsComment!]
+  favoritedArticlesIds: [ID!]
+  favoritedArticles: [UserfavoritedArticlesArticle!]
   clientMutationId: String!
 }
 
@@ -1261,6 +1310,7 @@ type User implements Node {
   comments(filter: CommentFilter, orderBy: CommentOrderBy, skip: Int, after: String, before: String, first: Int, last: Int): CommentConnection
   createdAt: DateTime!
   email: String
+  favoritedArticles(filter: ArticleFilter, orderBy: ArticleOrderBy, skip: Int, after: String, before: String, first: Int, last: Int): ArticleConnection
   id: ID!
   name: String!
   password: String
@@ -1275,6 +1325,7 @@ input UserarticlesArticle {
   title: String!
   commentsIds: [ID!]
   comments: [ArticlecommentsComment!]
+  favoritedByIds: [ID!]
 }
 
 input UsercommentsComment {
@@ -1302,6 +1353,17 @@ type UserEdge {
 
   # A cursor for use in pagination.
   cursor: String!
+}
+
+input UserfavoritedArticlesArticle {
+  body: String!
+  description: String!
+  slug: String
+  title: String!
+  authorId: ID
+  commentsIds: [ID!]
+  comments: [ArticlecommentsComment!]
+  favoritedByIds: [ID!]
 }
 
 input UserFilter {
@@ -1600,6 +1662,9 @@ input UserFilter {
   comments_every: CommentFilter
   comments_some: CommentFilter
   comments_none: CommentFilter
+  favoritedArticles_every: ArticleFilter
+  favoritedArticles_some: ArticleFilter
+  favoritedArticles_none: ArticleFilter
 }
 
 enum UserOrderBy {
