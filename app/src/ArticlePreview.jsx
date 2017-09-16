@@ -1,9 +1,10 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import { graphql, createFragmentContainer } from 'react-relay'
 
 import ArticleInfo from './ArticleInfo'
 
-const ArticlePreview = () =>
+const ArticlePreview = ({ article }) =>
   <div className="article-preview">
     <div className="article-meta">
       <ArticleInfo />
@@ -12,11 +13,21 @@ const ArticlePreview = () =>
         <i className="ion-heart"></i> 29
       </button>
     </div>
-    <Link to="/article" className="preview-link">
-      <h1>How to build webapps that scale</h1>
-      <p>This is the description for the post.</p>
+    <Link to={`/article/${article.slug}`} className="preview-link">
+      <h1>{article.title}</h1>
+      <p>{article.description}</p>
       <span>Read more...</span>
     </Link>
   </div>
 
-export default ArticlePreview
+export default createFragmentContainer(
+  ArticlePreview,
+  graphql`
+    fragment ArticlePreview_article on Article {
+      slug
+      title
+      description
+    }
+  `
+)
+

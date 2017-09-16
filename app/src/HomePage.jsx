@@ -1,9 +1,11 @@
 import React from 'react'
+import { graphql } from 'react-relay'
 
+import QueryComponent from './relay/QueryComponent'
 import Page from './Page'
 import ArticlePreview from './ArticlePreview'
 
-const HomePage = () =>
+const HomePage = ({ viewer: { articles } }) =>
   <Page className="home-page">
     <div className="banner">
       <div className="container">
@@ -27,8 +29,7 @@ const HomePage = () =>
             </ul>
           </div>
 
-          <ArticlePreview />
-          <ArticlePreview />
+          {articles.edges.map(edge => <ArticlePreview article={edge.node} key={edge.node.id} />)}
         </div>
 
         <div className="col-md-3">
@@ -52,4 +53,23 @@ const HomePage = () =>
     </div>
   </Page>
 
-export default HomePage
+const HomePageQuery = graphql`
+  query HomePageQuery {
+    viewer {
+      articles: allArticles {
+        edges {
+          node {
+            id
+            ...ArticlePreview_article
+          }
+        }
+      }
+    }
+  }
+`
+
+export default () =>
+  <QueryComponent
+    query={HomePageQuery}
+    component={HomePage}
+  />
