@@ -1,6 +1,8 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { graphql } from 'react-relay'
+import { withRouter } from 'react-router-dom'
 
+import QueryComponent from './relay/QueryComponent'
 import Page from './Page'
 import CommentForm from './CommentForm'
 import Comment from './Comment'
@@ -8,11 +10,11 @@ import FollowButton from './FollowButton'
 import FavoriteButton from './FavoriteButton'
 import ArticleInfo from './ArticleInfo'
 
-const ArticlePage = () =>
+const ArticlePage = ({ viewer: { article } }) =>
   <Page className="article-page">
     <div className="banner">
       <div className="container">
-        <h1>How to build webapps that scale</h1>
+        <h1>{article.title}</h1>
 
         <div className="article-meta">
           <ArticleInfo />
@@ -25,13 +27,7 @@ const ArticlePage = () =>
 
     <div className="container page">
       <div className="row article-content">
-        <div className="col-md-12">
-          <p>
-          Web development technologies have evolved at an incredible clip over the past few years.
-          </p>
-          <h2 id="introducing-ionic">Introducing RealWorld.</h2>
-          <p>It's a great solution for learning how other frameworks work.</p>
-        </div>
+        <div className="col-md-12" dangerouslySetInnerHTML={{__html: article.body }} />
       </div>
 
       <hr />
@@ -55,4 +51,22 @@ const ArticlePage = () =>
     </div>
   </Page>
 
-export default ArticlePage
+const ArticlePageQuery = graphql`
+  query ArticlePageQuery($slug: String!) {
+    viewer {
+      article: Article(slug: $slug) {
+        title
+        body
+      }
+    }
+  }
+`
+
+export default withRouter((props) => (
+  <QueryComponent
+    query={ArticlePageQuery}
+    component={ArticlePage}
+    variables={{ slug: props.match.params.slug }}
+    {...props}
+  />
+))
