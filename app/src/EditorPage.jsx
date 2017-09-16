@@ -1,7 +1,9 @@
 import React from 'react'
 import { reduxForm, Field } from 'redux-form'
 import { withRouter } from 'react-router-dom'
+import { graphql } from 'react-relay'
 
+import QueryComponent from './relay/QueryComponent'
 import Page from './Page'
 import createArticle from './mutations/CreateArticle'
 
@@ -53,9 +55,9 @@ EditorForm = reduxForm({
   form: 'editor'
 })(EditorForm)
 
-const EditorPage = ({ handleSubmit, history }) => {
+const EditorPage = ({ viewer, handleSubmit, history }) => {
   const submit = async (values) => {
-    const articleSlug = await createArticle(values)
+    const articleSlug = await createArticle({ ...values, authorId: viewer.user.id })
     history.push(`/article/${articleSlug}`)
   }
 
@@ -72,4 +74,20 @@ const EditorPage = ({ handleSubmit, history }) => {
   )
 }
 
-export default withRouter(EditorPage)
+const EditorPageQuery = graphql`
+  query EditorPageQuery {
+    viewer {
+      user {
+        id
+      }
+    }
+  }
+`
+
+export default withRouter((props) => (
+  <QueryComponent
+    query={EditorPageQuery}
+    component={EditorPage}
+    {...props}
+  />
+))

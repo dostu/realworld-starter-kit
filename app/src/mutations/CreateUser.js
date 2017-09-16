@@ -10,10 +10,11 @@ const mutation = graphql`
   }
 `
 
-export default ({ email, password }) =>
+export default ({ name, email, password }) =>
   new Promise((resolve, reject) => {
     const variables = {
       input: {
+        name,
         authProvider: { email: { email, password } },
         clientMutationId: ''
       }

@@ -7,7 +7,7 @@ import ArticleInfo from './ArticleInfo'
 const ArticlePreview = ({ article }) =>
   <div className="article-preview">
     <div className="article-meta">
-      <ArticleInfo />
+      <ArticleInfo article={article} />
 
       <button className="btn btn-outline-primary btn-sm pull-xs-right">
         <i className="ion-heart"></i> 29
@@ -18,6 +18,10 @@ const ArticlePreview = ({ article }) =>
       <p>{article.description}</p>
       <span>Read more...</span>
     </Link>
+    <ul className="tag-list">
+      <li className="tag-default tag-pill tag-outline">Music</li>
+      <li className="tag-default tag-pill tag-outline">Song</li>
+    </ul>
   </div>
 
 export default createFragmentContainer(
@@ -27,6 +31,7 @@ export default createFragmentContainer(
       slug
       title
       description
+      ...ArticleInfo_article
     }
   `
 )

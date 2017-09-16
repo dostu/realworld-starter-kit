@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Component } from 'react'
 import { reduxForm, Field } from 'redux-form'
 import { Link } from 'react-router-dom'
 
@@ -46,27 +46,42 @@ RegistrationForm = reduxForm({
   form: 'registration'
 })(RegistrationForm)
 
-const RegistrationPage = ({ history }) => {
-  const submit = async (values) => {
-    await createUser(values)
-    history.push(`/login`)
+class RegistrationPage extends Component {
+  state = {
+    errors: []
   }
 
-  return (
-    <Page className="auth-page">
-      <div className="container page">
-        <div className="row">
-          <div className="col-md-6 offset-md-3 col-xs-12">
-            <h1 className="text-xs-center">Sign up</h1>
-            <p className="text-xs-center">
-              <Link to="/login">Have an account?</Link>
-            </p>
-            <RegistrationForm onSubmit={submit} />
+  submit = async (values) => {
+    try {
+      await createUser(values)
+      this.props.history.push(`/login`)
+    } catch (error) {
+      this.setState({ errors: error })
+    }
+  }
+
+  render() {
+    return (
+      <Page className="auth-page">
+        <div className="container page">
+          <div className="row">
+            <div className="col-md-6 offset-md-3 col-xs-12">
+              <h1 className="text-xs-center">Sign up</h1>
+              <p className="text-xs-center">
+                <Link to="/login">Have an account?</Link>
+              </p>
+
+              <ul className="error-messages">
+                {this.state.errors.map((error, index) => <li key={index}>{error.message}</li>)}
+              </ul>
+
+              <RegistrationForm onSubmit={this.submit} />
+            </div>
           </div>
         </div>
-      </div>
-    </Page>
-  )
+      </Page>
+    )
+  }
 }
 
 export default RegistrationPage

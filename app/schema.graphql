@@ -1,11 +1,63 @@
+input AddToArticleOnCommentArticleInput {
+  commentsCommentId: ID!
+  articleArticleId: ID!
+  clientMutationId: String!
+}
+
+type AddToArticleOnCommentPayload {
+  viewer: Viewer!
+  clientMutationId: String!
+  articleArticle: Article
+  commentsComment: Comment
+  articleArticleEdge: ArticleEdge
+  commentsCommentEdge: CommentEdge
+}
+
+type AddToUserOnArticlePayload {
+  viewer: Viewer!
+  clientMutationId: String!
+  authorUser: User
+  articlesArticle: Article
+  authorUserEdge: UserEdge
+  articlesArticleEdge: ArticleEdge
+}
+
+input AddToUserOnArticleUserInput {
+  articlesArticleId: ID!
+  authorUserId: ID!
+  clientMutationId: String!
+}
+
+type AddToUserOnCommentPayload {
+  viewer: Viewer!
+  clientMutationId: String!
+  authorUser: User
+  commentsComment: Comment
+  authorUserEdge: UserEdge
+  commentsCommentEdge: CommentEdge
+}
+
+input AddToUserOnCommentUserInput {
+  commentsCommentId: ID!
+  authorUserId: ID!
+  clientMutationId: String!
+}
+
 type Article implements Node {
+  author(filter: UserFilter): User!
   body: String!
+  comments(filter: CommentFilter, orderBy: CommentOrderBy, skip: Int, after: String, before: String, first: Int, last: Int): CommentConnection
   createdAt: DateTime!
   description: String!
   id: ID!
   slug: String
   title: String!
   updatedAt: DateTime!
+}
+
+input ArticlecommentsComment {
+  body: String
+  authorId: ID
 }
 
 # A connection to a list of items.
@@ -279,6 +331,10 @@ input ArticleFilter {
 
   # All values greater than or equal the given value.
   updatedAt_gte: DateTime
+  author: UserFilter
+  comments_every: CommentFilter
+  comments_some: CommentFilter
+  comments_none: CommentFilter
 }
 
 enum ArticleOrderBy {
@@ -307,11 +363,199 @@ input AuthProviderSignupData {
   email: AUTH_PROVIDER_EMAIL
 }
 
+type Comment implements Node {
+  article(filter: ArticleFilter): Article!
+  author(filter: UserFilter): User!
+  body: String
+  createdAt: DateTime!
+  id: ID!
+  updatedAt: DateTime!
+}
+
+input CommentarticleArticle {
+  body: String!
+  description: String!
+  slug: String
+  title: String!
+  authorId: ID
+  commentsIds: [ID!]
+  comments: [ArticlecommentsComment!]
+}
+
+# A connection to a list of items.
+type CommentConnection {
+  # Information to aid in pagination.
+  pageInfo: PageInfo!
+
+  # A list of edges.
+  edges: [CommentEdge]
+
+  # Count of filtered result set without considering pagination arguments
+  count: Int!
+}
+
+# An edge in a connection.
+type CommentEdge {
+  # The item at the end of the edge.
+  node: Comment!
+
+  # A cursor for use in pagination.
+  cursor: String!
+}
+
+input CommentFilter {
+  # Logical AND on all given filters.
+  AND: [CommentFilter!]
+
+  # Logical OR on all given filters.
+  OR: [CommentFilter!]
+  body: String
+
+  # All values that are not equal to given value.
+  body_not: String
+
+  # All values that are contained in given list.
+  body_in: [String!]
+
+  # All values that are not contained in given list.
+  body_not_in: [String!]
+
+  # All values less than the given value.
+  body_lt: String
+
+  # All values less than or equal the given value.
+  body_lte: String
+
+  # All values greater than the given value.
+  body_gt: String
+
+  # All values greater than or equal the given value.
+  body_gte: String
+
+  # All values containing the given string.
+  body_contains: String
+
+  # All values not containing the given string.
+  body_not_contains: String
+
+  # All values starting with the given string.
+  body_starts_with: String
+
+  # All values not starting with the given string.
+  body_not_starts_with: String
+
+  # All values ending with the given string.
+  body_ends_with: String
+
+  # All values not ending with the given string.
+  body_not_ends_with: String
+  createdAt: DateTime
+
+  # All values that are not equal to given value.
+  createdAt_not: DateTime
+
+  # All values that are contained in given list.
+  createdAt_in: [DateTime!]
+
+  # All values that are not contained in given list.
+  createdAt_not_in: [DateTime!]
+
+  # All values less than the given value.
+  createdAt_lt: DateTime
+
+  # All values less than or equal the given value.
+  createdAt_lte: DateTime
+
+  # All values greater than the given value.
+  createdAt_gt: DateTime
+
+  # All values greater than or equal the given value.
+  createdAt_gte: DateTime
+  id: ID
+
+  # All values that are not equal to given value.
+  id_not: ID
+
+  # All values that are contained in given list.
+  id_in: [ID!]
+
+  # All values that are not contained in given list.
+  id_not_in: [ID!]
+
+  # All values less than the given value.
+  id_lt: ID
+
+  # All values less than or equal the given value.
+  id_lte: ID
+
+  # All values greater than the given value.
+  id_gt: ID
+
+  # All values greater than or equal the given value.
+  id_gte: ID
+
+  # All values containing the given string.
+  id_contains: ID
+
+  # All values not containing the given string.
+  id_not_contains: ID
+
+  # All values starting with the given string.
+  id_starts_with: ID
+
+  # All values not starting with the given string.
+  id_not_starts_with: ID
+
+  # All values ending with the given string.
+  id_ends_with: ID
+
+  # All values not ending with the given string.
+  id_not_ends_with: ID
+  updatedAt: DateTime
+
+  # All values that are not equal to given value.
+  updatedAt_not: DateTime
+
+  # All values that are contained in given list.
+  updatedAt_in: [DateTime!]
+
+  # All values that are not contained in given list.
+  updatedAt_not_in: [DateTime!]
+
+  # All values less than the given value.
+  updatedAt_lt: DateTime
+
+  # All values less than or equal the given value.
+  updatedAt_lte: DateTime
+
+  # All values greater than the given value.
+  updatedAt_gt: DateTime
+
+  # All values greater than or equal the given value.
+  updatedAt_gte: DateTime
+  article: ArticleFilter
+  author: UserFilter
+}
+
+enum CommentOrderBy {
+  body_ASC
+  body_DESC
+  createdAt_ASC
+  createdAt_DESC
+  id_ASC
+  id_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+}
+
 input CreateArticle {
   body: String!
   description: String!
   slug: String
   title: String!
+  authorId: ID
+  commentsIds: [ID!]
+  comments: [ArticlecommentsComment!]
 }
 
 input CreateArticleInput {
@@ -319,6 +563,9 @@ input CreateArticleInput {
   description: String!
   slug: String
   title: String!
+  authorId: ID
+  commentsIds: [ID!]
+  comments: [ArticlecommentsComment!]
   clientMutationId: String!
 }
 
@@ -327,6 +574,31 @@ type CreateArticlePayload {
   clientMutationId: String!
   article: Article
   edge: ArticleEdge
+  author: User
+}
+
+input CreateComment {
+  body: String
+  articleId: ID
+  article: CommentarticleArticle
+  authorId: ID
+}
+
+input CreateCommentInput {
+  body: String
+  articleId: ID
+  article: CommentarticleArticle
+  authorId: ID
+  clientMutationId: String!
+}
+
+type CreateCommentPayload {
+  viewer: Viewer!
+  clientMutationId: String!
+  comment: Comment
+  edge: CommentEdge
+  article: Article
+  author: User
 }
 
 input CreateFile {
@@ -347,8 +619,12 @@ type CreateFilePayload {
 
 input CreateUser {
   bio: String
-  name: String
+  name: String!
   profilePictureUrl: String
+  articlesIds: [ID!]
+  articles: [UserarticlesArticle!]
+  commentsIds: [ID!]
+  comments: [UsercommentsComment!]
 }
 
 # If authentication was successful the payload contains the user and a token. If unsuccessful this payload is null.
@@ -370,6 +646,22 @@ type DeleteArticlePayload {
   clientMutationId: String!
   article: Article
   edge: ArticleEdge
+  author: User
+  deletedId: ID
+}
+
+input DeleteCommentInput {
+  id: ID!
+  clientMutationId: String!
+}
+
+type DeleteCommentPayload {
+  viewer: Viewer!
+  clientMutationId: String!
+  comment: Comment
+  edge: CommentEdge
+  article: Article
+  author: User
   deletedId: ID
 }
 
@@ -726,16 +1018,23 @@ enum FileOrderBy {
 
 type Mutation {
   createArticle(input: CreateArticleInput!): CreateArticlePayload
+  createComment(input: CreateCommentInput!): CreateCommentPayload
   createFile(input: CreateFileInput!): CreateFilePayload
   updateArticle(input: UpdateArticleInput!): UpdateArticlePayload
+  updateComment(input: UpdateCommentInput!): UpdateCommentPayload
   updateFile(input: UpdateFileInput!): UpdateFilePayload
   updateUser(input: UpdateUserInput!): UpdateUserPayload
   updateOrCreateArticle(input: UpdateOrCreateArticleInput!): UpdateOrCreateArticlePayload
+  updateOrCreateComment(input: UpdateOrCreateCommentInput!): UpdateOrCreateCommentPayload
   updateOrCreateFile(input: UpdateOrCreateFileInput!): UpdateOrCreateFilePayload
   updateOrCreateUser(input: UpdateOrCreateUserInput!): UpdateOrCreateUserPayload
   deleteArticle(input: DeleteArticleInput!): DeleteArticlePayload
+  deleteComment(input: DeleteCommentInput!): DeleteCommentPayload
   deleteFile(input: DeleteFileInput!): DeleteFilePayload
   deleteUser(input: DeleteUserInput!): DeleteUserPayload
+  addToArticleOnComment(input: AddToArticleOnCommentArticleInput!): AddToArticleOnCommentPayload
+  addToUserOnArticle(input: AddToUserOnArticleUserInput!): AddToUserOnArticlePayload
+  addToUserOnComment(input: AddToUserOnCommentUserInput!): AddToUserOnCommentPayload
   signinUser(input: SigninUserInput!): SigninPayload!
   createUser(input: SignupUserInput!): CreateUserPayload!
 }
@@ -786,8 +1085,12 @@ input SigninUserInput {
 
 input SignupUserInput {
   bio: String
-  name: String
+  name: String!
   profilePictureUrl: String
+  articlesIds: [ID!]
+  articles: [UserarticlesArticle!]
+  commentsIds: [ID!]
+  comments: [UsercommentsComment!]
   clientMutationId: String!
   authProvider: AuthProviderSignupData!
 }
@@ -798,6 +1101,9 @@ input UpdateArticle {
   id: ID!
   slug: String
   title: String
+  authorId: ID
+  commentsIds: [ID!]
+  comments: [ArticlecommentsComment!]
 }
 
 input UpdateArticleInput {
@@ -806,6 +1112,9 @@ input UpdateArticleInput {
   id: ID!
   slug: String
   title: String
+  authorId: ID
+  commentsIds: [ID!]
+  comments: [ArticlecommentsComment!]
   clientMutationId: String!
 }
 
@@ -814,6 +1123,33 @@ type UpdateArticlePayload {
   clientMutationId: String!
   article: Article
   edge: ArticleEdge
+  author: User
+}
+
+input UpdateComment {
+  body: String
+  id: ID!
+  articleId: ID
+  article: CommentarticleArticle
+  authorId: ID
+}
+
+input UpdateCommentInput {
+  body: String
+  id: ID!
+  articleId: ID
+  article: CommentarticleArticle
+  authorId: ID
+  clientMutationId: String!
+}
+
+type UpdateCommentPayload {
+  viewer: Viewer!
+  clientMutationId: String!
+  comment: Comment
+  edge: CommentEdge
+  article: Article
+  author: User
 }
 
 input UpdateFile {
@@ -845,6 +1181,22 @@ type UpdateOrCreateArticlePayload {
   clientMutationId: String!
   article: Article
   edge: ArticleEdge
+  author: User
+}
+
+input UpdateOrCreateCommentInput {
+  update: UpdateComment!
+  create: CreateComment!
+  clientMutationId: String!
+}
+
+type UpdateOrCreateCommentPayload {
+  viewer: Viewer!
+  clientMutationId: String!
+  comment: Comment
+  edge: CommentEdge
+  article: Article
+  author: User
 }
 
 input UpdateOrCreateFileInput {
@@ -878,6 +1230,10 @@ input UpdateUser {
   id: ID!
   name: String
   profilePictureUrl: String
+  articlesIds: [ID!]
+  articles: [UserarticlesArticle!]
+  commentsIds: [ID!]
+  comments: [UsercommentsComment!]
 }
 
 input UpdateUserInput {
@@ -885,6 +1241,10 @@ input UpdateUserInput {
   id: ID!
   name: String
   profilePictureUrl: String
+  articlesIds: [ID!]
+  articles: [UserarticlesArticle!]
+  commentsIds: [ID!]
+  comments: [UsercommentsComment!]
   clientMutationId: String!
 }
 
@@ -896,14 +1256,31 @@ type UpdateUserPayload {
 }
 
 type User implements Node {
+  articles(filter: ArticleFilter, orderBy: ArticleOrderBy, skip: Int, after: String, before: String, first: Int, last: Int): ArticleConnection
   bio: String
+  comments(filter: CommentFilter, orderBy: CommentOrderBy, skip: Int, after: String, before: String, first: Int, last: Int): CommentConnection
   createdAt: DateTime!
   email: String
   id: ID!
-  name: String
+  name: String!
   password: String
   profilePictureUrl: String
   updatedAt: DateTime!
+}
+
+input UserarticlesArticle {
+  body: String!
+  description: String!
+  slug: String
+  title: String!
+  commentsIds: [ID!]
+  comments: [ArticlecommentsComment!]
+}
+
+input UsercommentsComment {
+  body: String
+  articleId: ID
+  article: CommentarticleArticle
 }
 
 # A connection to a list of items.
@@ -1217,6 +1594,12 @@ input UserFilter {
 
   # All values greater than or equal the given value.
   updatedAt_gte: DateTime
+  articles_every: ArticleFilter
+  articles_some: ArticleFilter
+  articles_none: ArticleFilter
+  comments_every: CommentFilter
+  comments_some: CommentFilter
+  comments_none: CommentFilter
 }
 
 enum UserOrderBy {
@@ -1241,12 +1624,14 @@ enum UserOrderBy {
 # This is the famous Relay viewer object
 type Viewer {
   allArticles(filter: ArticleFilter, orderBy: ArticleOrderBy, skip: Int, after: String, before: String, first: Int, last: Int): ArticleConnection!
+  allComments(filter: CommentFilter, orderBy: CommentOrderBy, skip: Int, after: String, before: String, first: Int, last: Int): CommentConnection!
   allFiles(filter: FileFilter, orderBy: FileOrderBy, skip: Int, after: String, before: String, first: Int, last: Int): FileConnection!
   allUsers(filter: UserFilter, orderBy: UserOrderBy, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
   user: User
   Article(id: ID, slug: String): Article
+  Comment(id: ID): Comment
   File(id: ID, secret: String, url: String): File
-  User(email: String, id: ID): User
+  User(email: String, id: ID, name: String): User
   id: ID!
 }
 

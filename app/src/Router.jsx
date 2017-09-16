@@ -15,7 +15,7 @@ const Router = () => (
       <Route exact path="/" component={HomePage}/>
       <Route exact path="/login" component={LoginPage}/>
       <Route exact path="/register" component={RegistrationPage}/>
-      <Route exact path="/profile" component={ProfilePage}/>
+      <Route exact path="/profile/:name" component={ProfilePage}/>
       <Route exact path="/settings" component={SettingsPage}/>
       <Route exact path="/editor" component={EditorPage}/>
       <Route exact path="/article/:slug" component={ArticlePage}/>
