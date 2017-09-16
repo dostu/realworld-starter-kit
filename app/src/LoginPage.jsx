@@ -64,7 +64,7 @@ class LoginPage extends Component {
               </p>
 
               <ul className="error-messages">
-                {this.state.errors.map(error => <li>{error.message}</li>)}
+                {this.state.errors.map((error, index) => <li key={index}>{error.message}</li>)}
               </ul>
 
               <LoginForm onSubmit={this.submit} />

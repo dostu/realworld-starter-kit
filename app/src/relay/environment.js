@@ -8,7 +8,7 @@ const fetchQuery = async (operation, variables, cacheConfig, uploadables) => {
   const response = await fetch(url, {
     method: 'POST',
     headers: {
-      Authorization: `JWT ${token}`,
+      Authorization: `Bearer ${token}`,
       'content-type': 'application/json'
     },
     body: JSON.stringify({
