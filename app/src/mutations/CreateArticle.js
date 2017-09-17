@@ -27,12 +27,3 @@ export default ({ title, description, body, authorId }) =>
 
     commitMutation(environment, config)
   })
-
-
-
-
-
-
-
-
-

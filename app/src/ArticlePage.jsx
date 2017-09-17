@@ -9,57 +9,74 @@ import Comment from './Comment'
 import FollowButton from './FollowButton'
 import FavoriteButton from './FavoriteButton'
 import ArticleInfo from './ArticleInfo'
+import createComment from './mutations/CreateComment'
 
-const ArticlePage = ({ viewer: { article, user } }) =>
-  <Page className="article-page">
-    <div className="banner">
-      <div className="container">
-        <h1>{article.title}</h1>
+const ArticlePage = ({ viewer: { article, user } }) => {
+  const comment = async values => {
+    await createComment({ ...values, articleId: article.id, authorId: user.id })
+  }
 
-        <div className="article-meta">
-          <ArticleInfo article={article} />
-          <FollowButton followedUser={article.author} user={user} />
-          &nbsp;&nbsp;
-          <FavoriteButton user={user} article={article} />
+  return (
+    <Page className="article-page">
+      <div className="banner">
+        <div className="container">
+          <h1>{article.title}</h1>
+
+          <div className="article-meta">
+            <ArticleInfo article={article} />
+            <FollowButton followedUser={article.author} user={user} />
+            &nbsp;&nbsp;
+            <FavoriteButton user={user} article={article} />
+          </div>
         </div>
       </div>
-    </div>
-    <div className="container page">
-      <div className="row article-content">
-        <div className="col-md-12" dangerouslySetInnerHTML={{__html: article.body }} />
-      </div>
-      <hr />
-      <div className="article-actions">
-        <div className="article-meta">
-          <ArticleInfo article={article} />
-          <FollowButton followedUser={article.author} user={user} />
-          &nbsp;
-          <FavoriteButton user={user} article={article} />
+      <div className="container page">
+        <div className="row article-content">
+          <div className="col-md-12" dangerouslySetInnerHTML={{__html: article.body }} />
+        </div>
+        <hr />
+        <div className="article-actions">
+          <div className="article-meta">
+            <ArticleInfo article={article} />
+            <FollowButton followedUser={article.author} user={user} />
+            &nbsp;
+            <FavoriteButton user={user} article={article} />
+          </div>
+        </div>
+        <div className="row">
+          <div className="col-xs-12 col-md-8 offset-md-2">
+            <CommentForm user={user} onSubmit={comment} />
+            {article.comments.edges.map(edge => <Comment comment={edge.node} />)}
+          </div>
         </div>
       </div>
-      <div className="row">
-        <div className="col-xs-12 col-md-8 offset-md-2">
-          <CommentForm />
-          <Comment />
-          <Comment />
-        </div>
-      </div>
-    </div>
-  </Page>
+    </Page>
+  )
+}
 
 const ArticlePageQuery = graphql`
   query ArticlePageQuery($slug: String!) {
     viewer {
       user {
+        id
         ...FavoriteButton_user
+        ...CommentForm_user
       }
       article: Article(slug: $slug) {
+        id
         title
         body
         ...ArticleInfo_article
         ...FavoriteButton_article
         author {
           ...FollowButton_followedUser
+        }
+        comments {
+          edges {
+            node {
+              ...Comment_comment
+            }
+          }
         }
       }
     }

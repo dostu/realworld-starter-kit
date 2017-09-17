@@ -1,14 +1,33 @@
 import React from 'react'
+import { graphql, createFragmentContainer } from 'react-relay'
+import { reduxForm, Field } from 'redux-form'
 
-const CommentForm = () =>
-  <form className="card comment-form">
+let CommentForm = ({ user, handleSubmit }) =>
+  <form onSubmit={handleSubmit} className="card comment-form">
     <div className="card-block">
-      <textarea className="form-control" placeholder="Write a comment..." rows="3"></textarea>
+      <Field
+        name="body"
+        component="textarea"
+        className="form-control"
+        placeholder="Write a comment..."
+        rows="3"
+      />
     </div>
     <div className="card-footer">
-      <img src="http://i.imgur.com/Qr71crq.jpg" className="comment-author-img" />
-      <button className="btn btn-sm btn-primary">Post Comment</button>
+      <img src={user.profilePictureUrl} className="comment-author-img" />
+      <button type="submit" className="btn btn-sm btn-primary">Post Comment</button>
     </div>
   </form>
 
-export default CommentForm
+CommentForm = reduxForm({
+  form: 'comment'
+})(CommentForm)
+
+export default createFragmentContainer(
+  CommentForm,
+  graphql`
+    fragment CommentForm_user on User {
+      profilePictureUrl
+    }
+  `
+)
