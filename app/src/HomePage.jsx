@@ -5,8 +5,8 @@ import QueryComponent from './relay/QueryComponent'
 import Page from './Page'
 import ArticlePreview from './ArticlePreview'
 
-const HomePage = ({ viewer: { articles } }) =>
-  <Page className="home-page">
+const HomePage = ({ viewer, viewer: { articles } }) =>
+  <Page viewer={viewer} className="home-page">
     <div className="banner">
       <div className="container">
         <h1 className="logo-font">conduit</h1>
@@ -56,6 +56,7 @@ const HomePage = ({ viewer: { articles } }) =>
 const HomePageQuery = graphql`
   query HomePageQuery {
     viewer {
+      ...Page_viewer
       articles: allArticles {
         edges {
           node {

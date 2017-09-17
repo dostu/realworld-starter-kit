@@ -62,7 +62,7 @@ const EditorPage = ({ viewer, handleSubmit, history }) => {
   }
 
   return (
-    <Page className="editor-page">
+    <Page viewer={viewer} className="editor-page">
       <div className="container page">
         <div className="row">
           <div className="col-md-10 offset-md-1 col-xs-12">
@@ -77,6 +77,7 @@ const EditorPage = ({ viewer, handleSubmit, history }) => {
 const EditorPageQuery = graphql`
   query EditorPageQuery {
     viewer {
+      ...Page_viewer
       user {
         id
       }

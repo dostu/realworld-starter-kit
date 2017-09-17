@@ -7,8 +7,8 @@ import Page from './Page'
 import FollowButton from './FollowButton'
 import ArticlePreview from './ArticlePreview'
 
-const ProfilePage = ({ viewer: { user, currentUser } }) =>
-  <Page className="profile-page">
+const ProfilePage = ({ viewer, viewer: { user, currentUser } }) =>
+  <Page viewer={viewer} className="profile-page">
     <div className="user-info">
       <div className="container">
         <div className="row">
@@ -36,7 +36,7 @@ const ProfilePage = ({ viewer: { user, currentUser } }) =>
             </ul>
           </div>
 
-          {user.articles.edges.map(edge => <ArticlePreview article={edge.node} />)}
+          {user.articles.edges.map((edge, index) => <ArticlePreview article={edge.node} key={index} />)}
         </div>
       </div>
     </div>
@@ -45,10 +45,10 @@ const ProfilePage = ({ viewer: { user, currentUser } }) =>
 const ProfilePageQuery = graphql`
   query ProfilePageQuery($name: String!) {
     viewer {
+      ...Page_viewer
       currentUser: user {
         ...FollowButton_user
       }
-
       user: User(name: $name) {
         profilePictureUrl
         name

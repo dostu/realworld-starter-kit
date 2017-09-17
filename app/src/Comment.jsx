@@ -8,11 +8,11 @@ const Comment = ({ comment, comment: { author } }) =>
       <p className="card-text">{comment.body}</p>
     </div>
     <div className="card-footer">
-      <a href="" className="comment-author">
+      <a href={`/profile/${author.name}`} className="comment-author">
         <img src={author.profilePictureUrl} className="comment-author-img" />
       </a>
       &nbsp;
-      <a href="" className="comment-author">{author.name}</a>
+      <a href={`/profile/${author.name}`} className="comment-author">{author.name}</a>
       <span className="date-posted">{moment(comment.createdAt).format('MMM Do')}</span>
       <span className="mod-options">
         <i className="ion-edit"></i>

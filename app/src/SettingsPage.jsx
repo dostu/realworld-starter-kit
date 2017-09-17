@@ -36,6 +36,7 @@ let SettingsForm = ({ initialValues, handleSubmit }) =>
           component="textarea"
           className="form-control form-control-lg"
           placeholder="Short bio about you"
+          rows="8"
         />
       </fieldset>
 
@@ -69,11 +70,11 @@ SettingsForm = reduxForm({
   form: 'settings'
 })(SettingsForm)
 
-const SettingsPage = ({ viewer: { user } }) => {
+const SettingsPage = ({ viewer, viewer: { user } }) => {
   const submit = values => updateUser({ ...values, id: user.id })
 
   return (
-    <Page className="settings-page">
+    <Page viewer={viewer} className="settings-page">
       <div className="container page">
         <div className="row">
           <div className="col-md-6 offset-md-3 col-xs-12">
@@ -90,6 +91,7 @@ const SettingsPage = ({ viewer: { user } }) => {
 const SettingsPageQuery = graphql`
   query SettingsPageQuery {
     viewer {
+      ...Page_viewer
       user {
         id
         profilePictureUrl

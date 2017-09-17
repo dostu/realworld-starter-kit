@@ -11,13 +11,13 @@ import FavoriteButton from './FavoriteButton'
 import ArticleInfo from './ArticleInfo'
 import createComment from './mutations/CreateComment'
 
-const ArticlePage = ({ viewer: { article, user } }) => {
+const ArticlePage = ({ viewer, viewer: { article, user } }) => {
   const comment = async values => {
     await createComment({ ...values, articleId: article.id, authorId: user.id })
   }
 
   return (
-    <Page className="article-page">
+    <Page viewer={viewer} className="article-page">
       <div className="banner">
         <div className="container">
           <h1>{article.title}</h1>
@@ -46,7 +46,7 @@ const ArticlePage = ({ viewer: { article, user } }) => {
         <div className="row">
           <div className="col-xs-12 col-md-8 offset-md-2">
             <CommentForm user={user} onSubmit={comment} />
-            {article.comments.edges.map(edge => <Comment comment={edge.node} />)}
+            {article.comments.edges.map((edge, index) => <Comment comment={edge.node} key={index} />)}
           </div>
         </div>
       </div>
@@ -57,9 +57,11 @@ const ArticlePage = ({ viewer: { article, user } }) => {
 const ArticlePageQuery = graphql`
   query ArticlePageQuery($slug: String!) {
     viewer {
+      ...Page_viewer
       user {
         id
         ...FavoriteButton_user
+        ...FollowButton_user
         ...CommentForm_user
       }
       article: Article(slug: $slug) {
