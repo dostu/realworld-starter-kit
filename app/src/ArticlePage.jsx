@@ -18,7 +18,7 @@ const ArticlePage = ({ viewer: { article, user } }) =>
 
         <div className="article-meta">
           <ArticleInfo article={article} />
-          <FollowButton />
+          <FollowButton followedUser={article.author} user={user} />
           &nbsp;&nbsp;
           <FavoriteButton user={user} article={article} />
         </div>
@@ -32,7 +32,7 @@ const ArticlePage = ({ viewer: { article, user } }) =>
       <div className="article-actions">
         <div className="article-meta">
           <ArticleInfo article={article} />
-          <FollowButton />
+          <FollowButton followedUser={article.author} user={user} />
           &nbsp;
           <FavoriteButton user={user} article={article} />
         </div>
@@ -58,6 +58,9 @@ const ArticlePageQuery = graphql`
         body
         ...ArticleInfo_article
         ...FavoriteButton_article
+        author {
+          ...FollowButton_followedUser
+        }
       }
     }
   }

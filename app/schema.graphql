@@ -28,6 +28,21 @@ input AddToFavoriteArticlesUserInput {
   clientMutationId: String!
 }
 
+type AddToFollowedUsersPayload {
+  viewer: Viewer!
+  clientMutationId: String!
+  followedByUser: User
+  followedUsersUser: User
+  followedByUserEdge: UserEdge
+  followedUsersUserEdge: UserEdge
+}
+
+input AddToFollowedUsersUserInput {
+  followedUsersUserId: ID!
+  followedByUserId: ID!
+  clientMutationId: String!
+}
+
 type AddToUserOnArticlePayload {
   viewer: Viewer!
   clientMutationId: String!
@@ -649,6 +664,8 @@ input CreateUser {
   comments: [UsercommentsComment!]
   favoritedArticlesIds: [ID!]
   favoritedArticles: [UserfavoritedArticlesArticle!]
+  followedByIds: [ID!]
+  followedUsersIds: [ID!]
 }
 
 # If authentication was successful the payload contains the user and a token. If unsuccessful this payload is null.
@@ -1058,9 +1075,11 @@ type Mutation {
   deleteUser(input: DeleteUserInput!): DeleteUserPayload
   addToArticleOnComment(input: AddToArticleOnCommentArticleInput!): AddToArticleOnCommentPayload
   addToFavoriteArticles(input: AddToFavoriteArticlesUserInput!): AddToFavoriteArticlesPayload
+  addToFollowedUsers(input: AddToFollowedUsersUserInput!): AddToFollowedUsersPayload
   addToUserOnArticle(input: AddToUserOnArticleUserInput!): AddToUserOnArticlePayload
   addToUserOnComment(input: AddToUserOnCommentUserInput!): AddToUserOnCommentPayload
   removeFromFavoriteArticles(input: RemoveFromFavoriteArticlesUserInput!): RemoveFromFavoriteArticlesPayload
+  removeFromFollowedUsers(input: RemoveFromFollowedUsersUserInput!): RemoveFromFollowedUsersPayload
   signinUser(input: SigninUserInput!): SigninPayload!
   createUser(input: SignupUserInput!): CreateUserPayload!
 }
@@ -1111,6 +1130,21 @@ input RemoveFromFavoriteArticlesUserInput {
   clientMutationId: String!
 }
 
+type RemoveFromFollowedUsersPayload {
+  viewer: Viewer!
+  clientMutationId: String!
+  followedByUser: User
+  followedUsersUser: User
+  followedByUserEdge: UserEdge
+  followedUsersUserEdge: UserEdge
+}
+
+input RemoveFromFollowedUsersUserInput {
+  followedUsersUserId: ID!
+  followedByUserId: ID!
+  clientMutationId: String!
+}
+
 # If authentication was successful the payload contains the user and a token. If unsuccessful this payload is null.
 type SigninPayload {
   token: String
@@ -1134,6 +1168,8 @@ input SignupUserInput {
   comments: [UsercommentsComment!]
   favoritedArticlesIds: [ID!]
   favoritedArticles: [UserfavoritedArticlesArticle!]
+  followedByIds: [ID!]
+  followedUsersIds: [ID!]
   clientMutationId: String!
   authProvider: AuthProviderSignupData!
 }
@@ -1281,6 +1317,8 @@ input UpdateUser {
   comments: [UsercommentsComment!]
   favoritedArticlesIds: [ID!]
   favoritedArticles: [UserfavoritedArticlesArticle!]
+  followedByIds: [ID!]
+  followedUsersIds: [ID!]
 }
 
 input UpdateUserInput {
@@ -1294,6 +1332,8 @@ input UpdateUserInput {
   comments: [UsercommentsComment!]
   favoritedArticlesIds: [ID!]
   favoritedArticles: [UserfavoritedArticlesArticle!]
+  followedByIds: [ID!]
+  followedUsersIds: [ID!]
   clientMutationId: String!
 }
 
@@ -1311,6 +1351,8 @@ type User implements Node {
   createdAt: DateTime!
   email: String
   favoritedArticles(filter: ArticleFilter, orderBy: ArticleOrderBy, skip: Int, after: String, before: String, first: Int, last: Int): ArticleConnection
+  followedBy(filter: UserFilter, orderBy: UserOrderBy, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection
+  followedUsers(filter: UserFilter, orderBy: UserOrderBy, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection
   id: ID!
   name: String!
   password: String
@@ -1665,6 +1707,12 @@ input UserFilter {
   favoritedArticles_every: ArticleFilter
   favoritedArticles_some: ArticleFilter
   favoritedArticles_none: ArticleFilter
+  followedBy_every: UserFilter
+  followedBy_some: UserFilter
+  followedBy_none: UserFilter
+  followedUsers_every: UserFilter
+  followedUsers_some: UserFilter
+  followedUsers_none: UserFilter
 }
 
 enum UserOrderBy {

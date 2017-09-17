@@ -7,7 +7,7 @@ import Page from './Page'
 import FollowButton from './FollowButton'
 import ArticlePreview from './ArticlePreview'
 
-const ProfilePage = ({ viewer: { user } }) =>
+const ProfilePage = ({ viewer: { user, currentUser } }) =>
   <Page className="profile-page">
     <div className="user-info">
       <div className="container">
@@ -16,7 +16,7 @@ const ProfilePage = ({ viewer: { user } }) =>
             <img src={user.profilePictureUrl} className="user-img" />
             <h4>{user.name}</h4>
             <p>{user.bio}</p>
-            <FollowButton className="action-btn" />
+            <FollowButton followedUser={user} user={currentUser} className="action-btn" />
           </div>
         </div>
       </div>
@@ -45,6 +45,10 @@ const ProfilePage = ({ viewer: { user } }) =>
 const ProfilePageQuery = graphql`
   query ProfilePageQuery($name: String!) {
     viewer {
+      currentUser: user {
+        ...FollowButton_user
+      }
+
       user: User(name: $name) {
         profilePictureUrl
         name
@@ -56,6 +60,7 @@ const ProfilePageQuery = graphql`
             }
           }
         }
+        ...FollowButton_followedUser
       }
     }
   }
