@@ -7,12 +7,15 @@ import ArticlePreview from './ArticlePreview'
 
 const HomePage = ({ viewer, viewer: { articles } }) =>
   <Page viewer={viewer} className="home-page">
-    <div className="banner">
-      <div className="container">
-        <h1 className="logo-font">conduit</h1>
-        <p>A place to share your knowledge.</p>
+    {
+      viewer.user &&
+      <div className="banner">
+        <div className="container">
+          <h1 className="logo-font">conduit</h1>
+          <p>A place to share your knowledge.</p>
+        </div>
       </div>
-    </div>
+    }
 
     <div className="container page">
       <div className="row">

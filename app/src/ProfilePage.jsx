@@ -6,6 +6,7 @@ import QueryComponent from './relay/QueryComponent'
 import Page from './Page'
 import FollowButton from './FollowButton'
 import ArticlePreview from './ArticlePreview'
+import ProfilePicture from './ProfilePicture'
 
 const ProfilePage = ({ viewer, viewer: { user, currentUser } }) => {
   const renderSettingsButton = () => (
@@ -24,7 +25,7 @@ const ProfilePage = ({ viewer, viewer: { user, currentUser } }) => {
         <div className="container">
           <div className="row">
             <div className="col-xs-12 col-md-10 offset-md-1">
-              <img src={user.profilePictureUrl} className="user-img" />
+              <ProfilePicture user={user} className="user-img" />
               <h4>{user.name}</h4>
               <p>{user.bio}</p>
               {user.name === currentUser.name ? renderSettingsButton() : renderFollowButton()}
@@ -75,6 +76,7 @@ const ProfilePageQuery = graphql`
           }
         }
         ...FollowButton_followedUser
+        ...ProfilePicture_user
       }
     }
   }

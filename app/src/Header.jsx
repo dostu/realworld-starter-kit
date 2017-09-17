@@ -2,6 +2,8 @@ import React from 'react'
 import { Link, NavLink } from 'react-router-dom'
 import { graphql, createFragmentContainer } from 'react-relay'
 
+import ProfilePicture from './ProfilePicture'
+
 const LoggedOutMenu = () => (
   <ul className="nav navbar-nav pull-xs-right">
     <li className="nav-item">
@@ -23,7 +25,7 @@ const LoggedInMenu = ({ user }) => (
     </li>
     <li className="nav-item">
       <NavLink to="/editor" className="nav-link" exact>
-        <i className="ion-compose"></i>&nbsp;New Post
+        <i className="ion-compose"></i>&nbsp;New Article
       </NavLink>
     </li>
     <li className="nav-item">
@@ -33,7 +35,7 @@ const LoggedInMenu = ({ user }) => (
     </li>
     <li className="nav-item">
       <NavLink to={`/profile/${user.name}`} className="nav-link" exact>
-        <img src={user.profilePictureUrl} className="user-pic" />
+        <ProfilePicture user={user} className="user-pic" />
         {user.name}
       </NavLink>
     </li>
@@ -57,7 +59,7 @@ export default createFragmentContainer(
   graphql`
     fragment Header_user on User {
       name
-      profilePictureUrl
+      ...ProfilePicture_user
     }
   `
 )

@@ -2,6 +2,8 @@ import React from 'react'
 import { graphql, createFragmentContainer } from 'react-relay'
 import { reduxForm, Field } from 'redux-form'
 
+import ProfilePicture from './ProfilePicture'
+
 let CommentForm = ({ user, handleSubmit }) =>
   <form onSubmit={handleSubmit} className="card comment-form">
     <div className="card-block">
@@ -14,7 +16,7 @@ let CommentForm = ({ user, handleSubmit }) =>
       />
     </div>
     <div className="card-footer">
-      <img src={user.profilePictureUrl} className="comment-author-img" />
+      <ProfilePicture user={user} className="comment-author-img" />
       <button type="submit" className="btn btn-sm btn-primary">Post Comment</button>
     </div>
   </form>
@@ -27,7 +29,7 @@ export default createFragmentContainer(
   CommentForm,
   graphql`
     fragment CommentForm_user on User {
-      profilePictureUrl
+      ...ProfilePicture_user
     }
   `
 )

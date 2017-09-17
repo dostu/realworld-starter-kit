@@ -2,6 +2,8 @@ import React from 'react'
 import { graphql, createFragmentContainer } from 'react-relay'
 import moment from 'moment'
 
+import ProfilePicture from './ProfilePicture'
+
 const Comment = ({ comment, comment: { author } }) =>
   <div className="card">
     <div className="card-block">
@@ -9,7 +11,7 @@ const Comment = ({ comment, comment: { author } }) =>
     </div>
     <div className="card-footer">
       <a href={`/profile/${author.name}`} className="comment-author">
-        <img src={author.profilePictureUrl} className="comment-author-img" />
+        <ProfilePicture user={author} className="comment-author-img" />
       </a>
       &nbsp;
       <a href={`/profile/${author.name}`} className="comment-author">{author.name}</a>
@@ -28,8 +30,8 @@ export default createFragmentContainer(
       body
       createdAt
       author {
-        profilePictureUrl
         name
+        ...ProfilePicture_user
       }
     }
   `

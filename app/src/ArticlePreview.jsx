@@ -17,11 +17,11 @@ const ArticlePreview = ({ article }) =>
       <h1>{article.title}</h1>
       <p>{article.description}</p>
       <span>Read more...</span>
+      <ul className="tag-list">
+        <li className="tag-default tag-pill tag-outline">Music</li>
+        <li className="tag-default tag-pill tag-outline">Song</li>
+      </ul>
     </Link>
-    <ul className="tag-list">
-      <li className="tag-default tag-pill tag-outline">Music</li>
-      <li className="tag-default tag-pill tag-outline">Song</li>
-    </ul>
   </div>
 
 export default createFragmentContainer(
