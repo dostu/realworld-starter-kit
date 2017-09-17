@@ -1,13 +1,13 @@
 import React from 'react'
 import { graphql } from 'react-relay'
 import { withRouter } from 'react-router-dom'
+import ReactMarkdown from 'react-markdown'
 
 import QueryComponent from './relay/QueryComponent'
 import Page from './Page'
 import CommentForm from './CommentForm'
 import Comment from './Comment'
-import FollowButton from './FollowButton'
-import FavoriteButton from './FavoriteButton'
+import ArticleActions from './ArticleActions'
 import ArticleInfo from './ArticleInfo'
 import createComment from './mutations/CreateComment'
 
@@ -24,23 +24,21 @@ const ArticlePage = ({ viewer, viewer: { article, user } }) => {
 
           <div className="article-meta">
             <ArticleInfo article={article} />
-            <FollowButton followedUser={article.author} user={user} />
-            &nbsp;&nbsp;
-            <FavoriteButton user={user} article={article} />
+            <ArticleActions article={article} user={user} />
           </div>
         </div>
       </div>
       <div className="container page">
         <div className="row article-content">
-          <div className="col-md-12" dangerouslySetInnerHTML={{__html: article.body }} />
+          <div className="col-md-12">
+            <ReactMarkdown source={article.body} />
+          </div>
         </div>
         <hr />
         <div className="article-actions">
           <div className="article-meta">
             <ArticleInfo article={article} />
-            <FollowButton followedUser={article.author} user={user} />
-            &nbsp;
-            <FavoriteButton user={user} article={article} />
+            <ArticleActions article={article} user={user} />
           </div>
         </div>
         <div className="row">
@@ -60,19 +58,15 @@ const ArticlePageQuery = graphql`
       ...Page_viewer
       user {
         id
-        ...FavoriteButton_user
-        ...FollowButton_user
         ...CommentForm_user
+        ...ArticleActions_user
       }
       article: Article(slug: $slug) {
         id
         title
         body
         ...ArticleInfo_article
-        ...FavoriteButton_article
-        author {
-          ...FollowButton_followedUser
-        }
+        ...ArticleActions_article
         comments {
           edges {
             node {

@@ -8,6 +8,7 @@ import ProfilePage from './ProfilePage'
 import SettingsPage from './SettingsPage'
 import ArticlePage from './ArticlePage'
 import EditorPage from './EditorPage'
+import EditorEditPage from './EditorEditPage'
 
 const Router = () => (
   <BrowserRouter>
@@ -18,6 +19,7 @@ const Router = () => (
       <Route exact path="/profile/:name" component={ProfilePage}/>
       <Route exact path="/settings" component={SettingsPage}/>
       <Route exact path="/editor" component={EditorPage}/>
+      <Route exact path="/editor/:slug" component={EditorEditPage}/>
       <Route exact path="/article/:slug" component={ArticlePage}/>
     </Switch>
   </BrowserRouter>

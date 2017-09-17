@@ -4,12 +4,12 @@ import { graphql } from 'react-relay'
 
 import QueryComponent from './relay/QueryComponent'
 import Page from './Page'
-import createArticle from './mutations/CreateArticle'
+import updateArticle from './mutations/UpdateArticle'
 import EditorForm from './EditorForm'
 
-const EditorPage = ({ viewer, handleSubmit, history }) => {
+const EditorEditPage = ({ viewer, viewer: { article }, handleSubmit, history }) => {
   const submit = async (values) => {
-    const articleSlug = await createArticle({ ...values, authorId: viewer.user.id })
+    const articleSlug = await updateArticle({ ...values, id: article.id })
     history.push(`/article/${articleSlug}`)
   }
 
@@ -18,7 +18,7 @@ const EditorPage = ({ viewer, handleSubmit, history }) => {
       <div className="container page">
         <div className="row">
           <div className="col-md-10 offset-md-1 col-xs-12">
-            <EditorForm onSubmit={submit} />
+            <EditorForm initialValues={article} onSubmit={submit} />
           </div>
         </div>
       </div>
@@ -26,12 +26,18 @@ const EditorPage = ({ viewer, handleSubmit, history }) => {
   )
 }
 
-const EditorPageQuery = graphql`
-  query EditorPageQuery {
+const EditorEditPageQuery = graphql`
+  query EditorEditPageQuery($slug: String!) {
     viewer {
       ...Page_viewer
       user {
         id
+      }
+      article: Article(slug: $slug) {
+        id
+        title
+        description
+        body
       }
     }
   }
@@ -39,8 +45,9 @@ const EditorPageQuery = graphql`
 
 export default withRouter((props) => (
   <QueryComponent
-    query={EditorPageQuery}
-    component={EditorPage}
+    query={EditorEditPageQuery}
+    component={EditorEditPage}
+    variables={{ slug: props.match.params.slug }}
     {...props}
   />
 ))
