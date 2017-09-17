@@ -1,9 +1,11 @@
 import React, { Component } from 'react'
 import { reduxForm, Field } from 'redux-form'
 import { Link } from 'react-router-dom'
+import { graphql } from 'react-relay'
 
 import Page from './Page'
 import createUser from './mutations/CreateUser'
+import QueryComponent from './relay/QueryComponent'
 
 let RegistrationForm = ({ handleSubmit }) =>
   <form onSubmit={ handleSubmit } >
@@ -13,7 +15,7 @@ let RegistrationForm = ({ handleSubmit }) =>
         component="input"
         type="text"
         className="form-control form-control-lg"
-        placeholder="Your Name"
+        placeholder="Username"
       />
     </fieldset>
 
@@ -62,7 +64,7 @@ class RegistrationPage extends Component {
 
   render() {
     return (
-      <Page className="auth-page">
+      <Page viewer={this.props.viewer} className="auth-page">
         <div className="container page">
           <div className="row">
             <div className="col-md-6 offset-md-3 col-xs-12">
@@ -84,4 +86,17 @@ class RegistrationPage extends Component {
   }
 }
 
-export default RegistrationPage
+const RegistrationPageQuery = graphql`
+  query RegistrationPageQuery {
+    viewer {
+      ...Page_viewer
+    }
+  }
+`
+
+export default () => (
+  <QueryComponent
+    query={RegistrationPageQuery}
+    component={RegistrationPage}
+  />
+)

@@ -1,10 +1,12 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { reduxForm, Field } from 'redux-form'
+import { graphql } from 'react-relay'
 import { withRouter } from 'react-router-dom'
 
 import Page from './Page'
 import signinUser from './mutations/SigninUser'
+import QueryComponent from './relay/QueryComponent'
 
 let LoginForm = ({ handleSubmit }) =>
   <form onSubmit={handleSubmit} >
@@ -54,7 +56,7 @@ class LoginPage extends Component {
 
   render() {
     return (
-      <Page className="auth-page">
+      <Page viewer={this.props.viewer} className="auth-page">
         <div className="container page">
           <div className="row">
             <div className="col-md-6 offset-md-3 col-xs-12">
@@ -76,4 +78,18 @@ class LoginPage extends Component {
   }
 }
 
-export default withRouter(LoginPage)
+const LoginPageQuery = graphql`
+  query LoginPageQuery {
+    viewer {
+      ...Page_viewer
+    }
+  }
+`
+
+export default withRouter((props) => (
+  <QueryComponent
+    query={LoginPageQuery}
+    component={LoginPage}
+    {...props}
+  />
+))

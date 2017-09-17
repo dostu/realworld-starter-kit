@@ -26,7 +26,7 @@ let SettingsForm = ({ initialValues, handleSubmit }) =>
           component="input"
           type="text"
           className="form-control form-control-lg"
-          placeholder="Your Name"
+          placeholder="Username"
         />
       </fieldset>
 
@@ -70,8 +70,13 @@ SettingsForm = reduxForm({
   form: 'settings'
 })(SettingsForm)
 
-const SettingsPage = ({ viewer, viewer: { user } }) => {
+const SettingsPage = ({ viewer, viewer: { user } }, history) => {
   const submit = values => updateUser({ ...values, id: user.id })
+
+  const logout = () => {
+    localStorage.removeItem('token')
+    history.push('/')
+  }
 
   return (
     <Page viewer={viewer} className="settings-page">
@@ -80,13 +85,16 @@ const SettingsPage = ({ viewer, viewer: { user } }) => {
           <div className="col-md-6 offset-md-3 col-xs-12">
             <h1 className="text-xs-center">Your Settings</h1>
             <SettingsForm onSubmit={submit} initialValues={user} />
+            <hr />
+            <button className="btn btn-outline-danger" onClick={logout}>
+              Or click here to logout.
+            </button>
           </div>
         </div>
       </div>
     </Page>
   )
 }
-
 
 const SettingsPageQuery = graphql`
   query SettingsPageQuery {
